@@ -8,6 +8,7 @@ dependencies = [
     "fastapi[standard]>=0.135.1",
     "psycopg2-binary>=2.9.11",
     "python-dotenv>=1.2.2",
+    "pytest>=9.0.2",
     "sqlalchemy>=2.0.48",
 ]
 [tool.setuptools.packages.find]
@@ -24,5 +25,5 @@ testpaths = ["tests"]
 dev = [
     "httpx>=0.28.1",
     "ruff",
-    "pytest>=9.0.2",
+    #"pytest>=9.0.2",
 ]
