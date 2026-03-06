@@ -28,6 +28,7 @@ jobs:
 # pytest
 
       - name: Run tests
+        working-directory: ./app_api
         run: uv run pytest
 
   lint:
