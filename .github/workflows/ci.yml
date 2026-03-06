@@ -19,11 +19,17 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Install dependencies for app_api
+        run: |
+          cd app_api
+          uv sync
 
-      - name: Install dependencies
-        run: uv sync
+      - name: Install dependencies for app_front
+        run: |
+          cd app_front
+          uv sync
 
-      - name: Run tests
-        run: uv run pytest tests/ -v
+      - name: Run tests for app_api
+        run: |
+          cd app_api
+          uv run pytest tests/ -v
