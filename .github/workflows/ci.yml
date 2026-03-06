@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: |
           cd app_api
-          uv pip install --system -e .
+          uv pip install
 
       - name: Run tests
-        run: uv run pytest app_api/tests/ -v
+        run: uv run pytest app_api/tests/
 
   lint:
     runs-on: ubuntu-latest
