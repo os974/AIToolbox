@@ -1,0 +1,39 @@
+name: CD
+on:
+  workflow_run:
+    workflows: ["CI"]  # Remplace par le nom exact de ton workflow CI
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Ne déclenche que si la CI passe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push API
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app_api
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mon-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mon-api:${{ github.sha }}
+
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app_front
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:${{ github.sha }}
