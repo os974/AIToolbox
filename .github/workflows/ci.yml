@@ -25,10 +25,10 @@ jobs:
         working-directory: ./app_api
         run: |
           uv pip install --system -e .
-          pytest
+# pytest
 
-    #  - name: Run tests
-    #    run: uv run --project app_api pytest
+      - name: Run tests
+        run: uv run pytest
 
   lint:
     runs-on: ubuntu-latest
