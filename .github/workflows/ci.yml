@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd app_api
-          uv pip install -e .
+          uv pip install --system -e .
 
       - name: Run tests
         run: uv run pytest app_api/tests/ -v
