@@ -40,38 +40,6 @@ Chaque service est isolé dans son conteneur Docker.
 
 ------------------------------------------------------------------------
 
-# Schéma de l'Architecture
-
-``` mermaid
-graph TD
-
-User((Utilisateur))
-
-subgraph Docker Compose
-
-subgraph Réseau front-api
-Front[Streamlit Frontend]
-end
-
-subgraph Réseau api-db
-API[FastAPI Backend]
-DB[(PostgreSQL)]
-end
-
-subgraph Stockage
-Vol[(Docker Volume)]
-end
-
-end
-
-User -->|Port 8501| Front
-Front <-->|HTTP| API
-API <-->|SQL| DB
-DB -.->|Persistance| Vol
-```
-
-------------------------------------------------------------------------
-
 # Structure du Dépôt
 
     .
@@ -160,8 +128,8 @@ arrêtés.
 ## 1 --- Cloner le projet
 
 ``` bash
-git clone https://github.com/USER/REPO.git
-cd REPO
+git clone https://github.com/os974/AIToolbox.git
+cd AIToolbox
 ```
 
 ------------------------------------------------------------------------
@@ -363,7 +331,7 @@ Gitleaks
 
 # Auteur
 
-Projet réalisé dans le cadre d'un exercice de formation Dev / Data
+Projet réalisé dans le cadre d'un exercice de formation Simplon Dev IA / Data
 Engineering visant à maîtriser :
 
 -   orchestration

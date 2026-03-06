@@ -108,3 +108,24 @@ Ajout du scan Gitleaks (security.yml)
 Création du workflow CD (cd.yml)
 Configuration des GitHub Secrets (DockerHub)
 Création du docker-compose.prod.yml
+
+
+--------------------------------------------------------------------
+Initialisation Git + GitHub
+1. Initialise le repo local
+git init
+git add .
+git commit -m "init: projet toolbox micro-services"
+2. Crée un repo sur GitHub
+
+Va sur github.com → New repository
+Donne-lui un nom, ne coche rien (pas de README, pas de .gitignore)
+Copie l'URL du repo
+
+3. Connecte et push
+git remote add origin https://github.com/TON_USER/TON_REPO.git
+git branch -M main
+git push -u origin main
+
+⚠️ Vérifie que ton .gitignore est bien présent avant le git add . pour ne pas versionner .env, .venv, __pycache__, la base SQLite...
+--------------------------------------------------------------------
