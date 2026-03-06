@@ -1,0 +1,110 @@
+### Phase A : La Logique Métier (Local)
+--------------------------------------------------------------------
+1. Créer la structure de fichiers
+# Crée les dossiers principaux
+mkdir app_api app_front tests
+# Crée les sous-dossiers pour l'API
+mkdir app_api/models app_api/modules app_api/maths app_api/data
+
+2. uv init sur app_api et app_front
+
+3. dossier app_api et installe SQLAlchemy
+uv add sqlalchemy
+
+4. dans app_api/modules/connect.py : Configure SQLAlchemy pour pointer vers une base SQLite locale (ex: sqlite:///./test.db
++Définition de la table (app_api/modules/models_db.py)
++Création du déclencheur (app_api/main.py) pour que le fichier test.db soit réellement créé
+
+
+5. dans app_api/main.py : 
+Crée une route POST /data qui reçoit un JSON et l'enregistre dans ta base SQLite.
+Crée une route GET /data qui lit la base et renvoie les données.
+
+6. Lancer API en local: uv run fastapi dev main.py
+http://127.0.0.1:8000/docs
+
+7. Streamlit : Crée le fichier app_front/main.py
+
++pages de navigation : Dans le dossier app_front/pages/, crée un fichier nommé 1_Ajouter_Donnees.py et 2_Voir_Donnees.py
+
+Test : uv run streamlit run main.py
+Streamlit a besoin d'un petit outil pour envoyer des messages à l'API. Dans le terminal de ton projet app_front, tape ceci : uv add requests + modifier les 2 pages de navigation (attention les variables utilisées)
+
+8. Tests :
+Configuration du app_api/pyproject.toml
+Ajoute ceci pour que pytest trouve tes modules :
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
++Test de la logique (ex: app_api/tests/test_maths.py)
++Test de l'API (ex: app_api/tests/test_api.py)
++Crée un fichier nommé mon_module.py dans le dossier app_api/maths/
+
+uv add --dev pytest httpx
+uv run pytest app_api/tests
+
+Modifie app_api/tests/test_api.py pour qu'il interroge une route qui existe dans ton main.py.
+Relance uv run pytest
+
+
+### Phase B : Variables d'Environnement et Hygiène.
+--------------------------------------------------------------------
+
+ dans app_api) :
+uv add python-dotenv
+
+Dans le .env : API_URL=http://localhost:8000
+Dans les fichiers Streamlit (app_front) 
+
+Pour finaliser la Phase B, vérifiez que :
+.env est bien listé dans votre .gitignore.
+Vous avez créé un fichier .env.example (modèle avec les clés, mais sans les valeurs secrètes).
+Votre .dockerignore exclut .env, .venv et __pycache__.
+
+
+valider votre logique avant Docker :
+
+Test API + SQLite : Lancez l'API en pointant sur une base SQLite locale (comme prévu en Phase A).
+cd app_api
+uv run fastapi dev main.py
+
+Test Frontend : Dans un autre terminal, lancez Streamlit. Vérifiez qu'il arrive à communiquer avec l'URL de l'API locale (ex: http://localhost:8000)
+.cd app_front
+uv run streamlit run main.py
+
+Tests Automatisés : Lancez vos tests pytest pour valider que la logique métier et les routes API fonctionnent toujours avec vos nouvelles variables d'environnement.
+uv run pytest app_api/tests
+
+
+### Phase C : Orchestration Docker Compose (test en local)
+--------------------------------------------------------------------
+créer les fichiers Dockerfile pour vos deux services:
+app_api/Dockerfile
+app_front/Dockerfile
+
+docker-compose.yml à la racine de votre projet.
+Il va créer les réseaux isolés et monter le volume pour la base de données.
+
+.env à la racine avec 
+POSTGRES_USER=mon_user
+POSTGRES_PASSWORD=mon_password
+POSTGRES_DB=ma_base
+
+docker ps
+docker compose up --build
+
+
+Dépendance pour PostgreSQL
+# Allez dans le dossier de l'API
+cd app_api
+
+# Ajoutez psycopg2-binary via uv
+uv add "psycopg2-binary"
+
+
+Phase 4 : Automatisation et Distribution
+Ajout du scan Gitleaks (security.yml)
+Création du workflow CD (cd.yml)
+Configuration des GitHub Secrets (DockerHub)
+Création du docker-compose.prod.yml

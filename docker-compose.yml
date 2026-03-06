@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - api-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: ./app_api
+    restart: always
+    env_file: .env
+    environment:
+      # On remplace localhost par le nom du service "db"
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    networks:
+      - api-db
+      - front-api
+    depends_on:
+      - db
+
+  front:
+    build: ./app_front
+    restart: always
+    ports:
+      - "8501:8501"
+    environment:
+      # On remplace localhost par le nom du service "api"
+      API_URL: http://api:8000
+    networks:
+      - front-api
+    depends_on:
+      - api
+
+networks:
+  front-api:
+  api-db:
+
+volumes:
+  postgres_data:
