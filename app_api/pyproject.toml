@@ -10,6 +10,11 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "sqlalchemy>=2.0.48",
 ]
+[tool.setuptools.packages.find]
+include = ["data*", "maths*", "models*", "modules*"]  # Liste tous tes packages
+
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
@@ -18,5 +23,6 @@ testpaths = ["tests"]
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
+    "ruff",
     "pytest>=9.0.2",
 ]
